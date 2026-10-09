@@ -6,6 +6,7 @@ import Link from "next/link";
 import Container from "./Container";
 import { site } from "../lib/site";
 import Image from "next/image";
+import { TypeAnimation } from 'react-type-animation';
 
 export default function HeroSection() {
   const containerRef = useRef(null);
@@ -40,7 +41,22 @@ export default function HeroSection() {
             ServicePro by BUYP Technologies
           </span>
           <h1 className="text-5xl sm:text-7xl font-extrabold leading-tight text-brand-navy dark:text-white tracking-tight">
-            Run your service centre <span className="text-gradient block mt-2">smarter & faster.</span>
+            Run your service centre{" "}
+            <span className="text-gradient block mt-2">
+              <TypeAnimation
+                sequence={[
+                  'smarter & faster.',
+                  2000,
+                  'like a pro.',
+                  2000,
+                  'with zero hassle.',
+                  2000,
+                ]}
+                wrapper="span"
+                cursor={true}
+                repeat={Infinity}
+              />
+            </span>
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl">
             {site.description}

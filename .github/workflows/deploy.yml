@@ -36,8 +36,8 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           
-          # Write the private key to a temporary file with restrictive permissions
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          # Write the private key to a temporary file with restrictive permissions, preserving line breaks perfectly
+          printenv SSH_PRIVATE_KEY > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           
           # Add the server's host key to known_hosts to prevent MITM attacks and avoid prompt

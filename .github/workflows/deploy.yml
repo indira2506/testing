@@ -43,22 +43,10 @@ jobs:
           
           # Add the server's host key to known_hosts to prevent MITM attacks and avoid prompt
           ssh-keyscan -p $SSH_PORT -H $SSH_HOST >> ~/.ssh/known_hosts
-
-          # Deploy using rsync safely (NO --delete)
-          # Flags:
-          # -a: archive mode (preserves permissions, times)
-          # -v: verbose output
-          # -z: compress file data
-          # --exclude: explicitly protect specific files and directories
-          rsync -avz \
-            -e "ssh -p $SSH_PORT -i ~/.ssh/id_rsa -o StrictHostKeyChecking=yes" \
-            --exclude '.htaccess' \
-            --exclude '.user.ini' \
-            --exclude 'php.ini' \
-            --exclude 'cgi-bin/' \
-            --exclude 'repo/' \
-            --exclude 'backup-before-static/' \
-            ./out/ $SSH_USER@$SSH_HOST:/home/anodzhiy/git.serviceproapp.in/
+          # Deploy using tar over SSH instead of rsync
+          # This safely streams the compressed contents of out/ to the server and extracts them.
+          # Since it's additive (like copying), it naturally preserves .htaccess, php.ini, and other unrelated files on the server without deleting them.
+          cd out && tar -czf - . | ssh -p $SSH_PORT -i ~/.ssh/id_rsa -o StrictHostKeyChecking=yes $SSH_USER@$SSH_HOST "cd /home/anodzhiy/git.serviceproapp.in/ && tar -xzf -"
             
           # Clean up the SSH key
           rm -f ~/.ssh/id_rsa

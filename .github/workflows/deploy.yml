@@ -1,0 +1,63 @@
+name: Deploy Next.js to MilesWeb
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Static Export
+        run: npm run build
+
+      - name: Deploy to Server via rsync
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          # Create a dedicated temporary directory for SSH config
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          
+          # Write the private key to a temporary file with restrictive permissions
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          
+          # Add the server's host key to known_hosts to prevent MITM attacks and avoid prompt
+          ssh-keyscan -p $SSH_PORT -H $SSH_HOST >> ~/.ssh/known_hosts
+
+          # Deploy using rsync safely (NO --delete)
+          # Flags:
+          # -a: archive mode (preserves permissions, times)
+          # -v: verbose output
+          # -z: compress file data
+          # --exclude: explicitly protect specific files and directories
+          rsync -avz \
+            -e "ssh -p $SSH_PORT -i ~/.ssh/id_rsa -o StrictHostKeyChecking=yes" \
+            --exclude '.htaccess' \
+            --exclude '.user.ini' \
+            --exclude 'php.ini' \
+            --exclude 'cgi-bin/' \
+            --exclude 'repo/' \
+            --exclude 'backup-before-static/' \
+            ./out/ $SSH_USER@$SSH_HOST:/home/anodzhiy/git.serviceproapp.in/
+            
+          # Clean up the SSH key
+          rm -f ~/.ssh/id_rsa

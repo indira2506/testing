@@ -10,8 +10,8 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          blue: '#1E6FEB',
-          blueLight: '#3B8CFF',
+          blue: '#10B981', // Changed to Emerald Green
+          blueLight: '#34D399',
           navy: '#0B1B3E',
           navyLight: '#0F245A',
         },

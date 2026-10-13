@@ -1,22 +1,27 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { site } from "../lib/site";
 
 export default function PricingCard({ plan }) {
   const isHighlighted = plan.highlighted;
   return (
-    <div
-      className={`relative flex flex-col rounded-2xl border bg-white dark:bg-slate-900 p-7 transition-all duration-300 ${
+    <motion.div
+      whileHover={{ y: -8, scale: isHighlighted ? 1.05 : 1.02 }}
+      transition={{ duration: 0.3 }}
+      className={`relative flex flex-col rounded-3xl border bg-white dark:bg-slate-900 p-8 transition-shadow duration-300 ${
         isHighlighted
           ? "border-brand-blue shadow-cardHover scale-[1.03] z-10"
-          : "border-slate-200 dark:border-slate-800 shadow-card hover:shadow-cardHover hover:-translate-y-1"
+          : "border-slate-200 dark:border-slate-800 shadow-card hover:shadow-cardHover"
       }`}
     >
       {isHighlighted && (
-        <div className="absolute inset-x-0 -top-px h-1.5 rounded-t-2xl bg-gradient-to-r from-brand-blue to-violet-500" />
+        <div className="absolute inset-x-0 -top-px h-1.5 rounded-t-3xl bg-gradient-to-r from-brand-blue to-violet-500" />
       )}
       {plan.tag && (
         <span
-          className={`absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-[11px] font-bold text-white shadow-sm ${
-            plan.tag === "MOST POPULAR" ? "bg-gradient-to-r from-brand-blue to-violet-500" : "bg-orange-500"
+          className={`absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-3.5 py-1 text-[11px] font-bold text-white shadow-md ${
+            plan.tag === "MOST POPULAR" ? "bg-gradient-to-r from-brand-blue to-violet-500 animate-pulse" : "bg-orange-500"
           }`}
         >
           {plan.tag}
@@ -77,6 +82,6 @@ export default function PricingCard({ plan }) {
       {plan.footnote && (
         <p className="mt-6 text-xs font-semibold text-brand-blue">{plan.footnote}</p>
       )}
-    </div>
+    </motion.div>
   );
 }

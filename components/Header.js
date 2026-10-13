@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import Container from "./Container";
 import ThemeToggle from "./ThemeToggle";
 import { nav, site } from "../lib/site";
@@ -24,27 +25,29 @@ export default function Header() {
       }`}
     >
       <Container className="flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <Image
-            src="/images/brand/logo-icon.png"
-            alt="ServicePro logo"
-            width={32}
-            height={32}
-            className="h-8 w-8"
-            priority
-          />
-          <span className="text-lg font-extrabold tracking-tight">
-            <span className="text-brand-blue">SERVICE</span>
-            <span className="text-brand-navy dark:text-white"> PRO</span>
-          </span>
-        </Link>
+        <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <Image
+              src="/images/brand/logo-icon.png"
+              alt="ServicePro logo"
+              width={32}
+              height={32}
+              className="h-8 w-8 transition-transform group-hover:rotate-6"
+              priority
+            />
+            <span className="text-lg font-extrabold tracking-tight">
+              <span className="text-brand-blue">SERVICE</span>
+              <span className="text-brand-navy dark:text-white"> PRO</span>
+            </span>
+          </Link>
+        </motion.div>
 
-        <nav className="hidden md:flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 p-1 dark:border-slate-800 dark:bg-slate-900">
+        <nav className="hidden md:flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 p-1 dark:border-slate-800 dark:bg-slate-900 shadow-sm">
           {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-full px-4 py-1.5 text-sm font-semibold text-slate-600 hover:bg-white hover:text-brand-navy hover:shadow-sm transition-all dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+              className="rounded-full px-4 py-1.5 text-sm font-semibold text-slate-600 hover:bg-white hover:text-brand-navy hover:shadow-sm transition-all duration-200 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
             >
               {item.label}
             </Link>
@@ -61,14 +64,16 @@ export default function Header() {
           >
             Login
           </a>
-          <a
+          <motion.a
+            whileHover={{ scale: 1.05, y: -1 }}
+            whileTap={{ scale: 0.96 }}
             href={site.trialUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full bg-brand-blue px-5 py-2.5 text-sm font-bold text-white shadow-card hover:bg-brand-navy hover:shadow-cardHover transition-all"
           >
             Start Free Trial
-          </a>
+          </motion.a>
         </div>
 
         <div className="flex items-center gap-2 md:hidden">

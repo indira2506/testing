@@ -1,23 +1,24 @@
 "use client";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 function FaqItem({ q, a, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div
-      className={`rounded-xl border bg-white dark:bg-slate-900 transition-colors ${
-        open ? "border-brand-blue/40 shadow-card" : "border-slate-200 dark:border-slate-800 shadow-sm"
+      className={`rounded-2xl border bg-white dark:bg-slate-900 transition-all duration-200 overflow-hidden ${
+        open ? "border-brand-blue/50 shadow-card" : "border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300"
       }`}
     >
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+        className="flex w-full items-center justify-between gap-4 px-6 py-4.5 text-left group"
         aria-expanded={open}
       >
-        <span className="text-sm font-bold text-brand-navy dark:text-white">{q}</span>
+        <span className="text-sm font-bold text-brand-navy dark:text-white group-hover:text-brand-blue transition-colors">{q}</span>
         <span
-          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors ${
-            open ? "bg-brand-blue text-white" : "bg-slate-100 text-slate-500 dark:text-slate-400"
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
+            open ? "bg-brand-blue text-white rotate-180" : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-slate-200"
           }`}
         >
           <svg
@@ -27,15 +28,25 @@ function FaqItem({ q, a, defaultOpen = false }) {
             fill="none"
             stroke="currentColor"
             strokeWidth="3"
-            className={`transition-transform ${open ? "rotate-180" : ""}`}
           >
             <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
       </button>
-      {open && (
-        <div className="px-5 pb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{a}</div>
-      )}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            <div className="px-6 pb-5 pt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800/60 mt-1">
+              {a}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
